@@ -29,9 +29,10 @@ export default class App extends React.Component {
       }) */
       
 
-      axios.post('http://10.8.5.21:5000/raindrop', {
-        comm: "hola",
-        sliderValue: this.state.sliderValue
+      axios.post('http://192.168.0.42:5000/raindrop', {
+        Request: "Pub",
+        Feed: "temperatura",
+        Value: this.state.sliderValue
       })
   }
   
