@@ -9,11 +9,12 @@ export default class App extends React.Component {
 
   state = {
     sliderValue:0,
-    humidityValue:50,
+    humidityValue:0,
   }
 
   async watering(value){
-    axios.post('http://192.168.43.18:5000/raindrop', {
+      console.log("WATERING |||||||||||||||")
+      axios.post('http://192.168.0.118:5000/raindrop', {
       Request: "water",
       Feed: "manualwater",
       Value: value
@@ -21,10 +22,11 @@ export default class App extends React.Component {
 
       //async getHumidity(){
       /// colorado 
-      axios.post('http://192.168.43.18:5000/raindrop')
+      /*
+      axios.post('http://192.168.0.118:5000/raindrop')
       .then ((response) => {
         console.log("respuesta recibida: " + response)
-      })
+      })*/
     
       /*
      const response = await fetch("http://192.168.0.83:4000/Humedad");
@@ -42,8 +44,7 @@ export default class App extends React.Component {
   }
 
   async UploadValue(){
-    console.log("hola")
-      axios.post('http://192.168.43.18:5000/raindrop', {
+      axios.post('http://192.168.0.118:5000/raindrop', {
         Request: "Pub",
         Feed: "threshold",
         Value: this.state.sliderValue
@@ -51,7 +52,8 @@ export default class App extends React.Component {
   }
 
   async UpdateHumidity() {
-    axios.post('http://192.168.43.18:5000/humidity', {
+    try{
+      axios.post('http://192.168.0.118:5000/humidity', {
         Request: "humedad",
         Feed: "humedad"
     })
@@ -59,6 +61,10 @@ export default class App extends React.Component {
       console.log(response.data.Value)
       this.setState({humidityValue: response.data.Value});
     })
+    } catch (err) {
+      console.error(`Error received from axios.post: ${JSON.stringify(err)}`);
+    }
+    
   }
 
   componentDidMount(){
@@ -79,7 +85,7 @@ render(){
       rotation={90}
       cropDegree={90}
       tintColor="#4682b4"
-      delay={0}
+      delay={10000}
       backgroundColor="#b0c4de"
       stroke={[2, 2]} //For a equaly dashed line
       strokeCap="circle" 
@@ -90,7 +96,7 @@ render(){
       <Slider
       style={{width: 300, height: 40}}
       maximumValue={1000}
-      minimumValue={1}
+      minimumValue={0}
       step={1}
       value={1000}
       value={this.state.sliderValue}
@@ -106,12 +112,12 @@ render(){
         <Text style ={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
       <TouchableOpacity style = {styles.buttonRain}>
-      <Text 
-      style ={styles.buttonText}
-      onPressIn = {this.watering("true")}
-      onPressOut = {this.watering("false")}
-      >
-      Water</Text>
+        <Text 
+        style ={styles.buttonText}
+        onPressIn = {this.watering("ON")}
+        onPressOut = {this.watering("OFF")}
+        >
+        Water</Text>
       </TouchableOpacity>
       </View>
     </View>
